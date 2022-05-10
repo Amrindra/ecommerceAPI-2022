@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema(
     color: { type: String },
     price: { type: Number },
   },
-  { timestamps: ture }
+  { timestamps: true }
 );
 
-module.exports = mongoose.model("Product", userSchema);
+module.exports = mongoose.model("Product", productSchema);
