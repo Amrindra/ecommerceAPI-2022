@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const userRouter = require("./routes/user");
+const authRoute = require("./routes/auth");
 
 //Have to config dotenv in order to use it
 dotenv.config();
@@ -10,9 +10,9 @@ dotenv.config();
 //if we don't use express.json we won't be able to send post request
 app.use(express.json());
 
-app.use("/api/users", userRouter);
+app.use("/api/auth", authRoute);
 
-app.use("/api/users", userRouter);
+// app.use("/api/users", userRouter);
 
 mongoose
   .connect(process.env.MONGO_URL)
