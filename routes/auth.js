@@ -14,7 +14,7 @@ router.post("/register", async (req, res) => {
     password: CryptoJS.AES.encrypt(
       req.body.password,
       process.env.PASSWORD_SECRET_KEY
-    ).toString(),
+    ).toString()
   });
 
   //Whenever we perform CRUD we should use async await to handle promise
@@ -51,13 +51,24 @@ router.post("/login", async (req, res) => {
       res.status(401).json("Wrong Credentials!");
     }
 
+    //after login process if everything is okay create JWT
+    const accessToken = jwt.sign(
+      {
+        //Passing user._id and user.isAdmin from the database to id and isAdmin
+        id: user._id
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "2d" }
+    );
+
     //Using spread operator to take out only password because we don't want to have password show in the database it's for safety
     //By implementing this, password won't show in the DB. Even though password has been hashed, but we shouldn't reveal password in the DB
     //_doc is from DB,
     const { password, ...others } = user._doc;
 
     //if everything matches send the rest of other data except password json back
-    res.status(200).json(others);
+    //if we don't pass other as spread operator won't get the right json file in the database
+    res.status(200).json({ ...others, accessToken });
   } catch (error) {
     res.status(500).json(error);
   }
