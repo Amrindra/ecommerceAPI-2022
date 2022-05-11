@@ -14,7 +14,7 @@ router.post("/register", async (req, res) => {
     password: CryptoJS.AES.encrypt(
       req.body.password,
       process.env.PASSWORD_SECRET_KEY
-    ).toString()
+    ).toString(),
   });
 
   //Whenever we perform CRUD we should use async await to handle promise
@@ -54,8 +54,8 @@ router.post("/login", async (req, res) => {
     //after login process if everything is okay create JWT
     const accessToken = jwt.sign(
       {
-        //Passing user._id and user.isAdmin from the database to id and isAdmin
-        id: user._id
+        //Passing user._id and user.isAdmin from the database to id and isAdmin payload
+        id: user._id,
       },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "2d" }
