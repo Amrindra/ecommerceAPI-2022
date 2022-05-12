@@ -19,14 +19,14 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
-        //Setting information
+        //Take everything inside req.body and then set/update them
         $set: req.body,
       },
       //To make it work we have to add new:true
       { new: true }
     );
 
-    //Sending response back to user if there is no any errors
+    //Sending updated response back to user if there is no any errors
     res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json(error);
