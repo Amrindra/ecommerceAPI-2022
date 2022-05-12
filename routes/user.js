@@ -47,13 +47,14 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
   }
 });
 
-//GET USER
+//GET SINGLE USER
 router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    // const { password, ...others } = user._doc;
-    // res.status(200).json(others);
-    res.status(200).json(user);
+    //By extracting {passord, ...others} because we wanted to send password to client side.
+    const { password, ...others } = user._doc;
+    res.status(200).json(others);
+    // res.status(200).json(user);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -61,9 +62,40 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
 
 //GET ALL USERS
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
+  //using query to limit how many users we want to return back
+  const query = req.query.new;
+
   try {
-    const users = await User.find();
+    const users = query
+      ? await User.find().sort({ _id: -1 }).limit(5)
+      : await User.find();
     res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+//USER STATS
+router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
+  const date = new Date();
+  const lastyear = new Date(date.setFullYear(date.getFullYear() - 1));
+
+  try {
+    const data = await User.aggregate([
+      { $match: { createdAt: { $gte: lastyear } } },
+      {
+        $preject: {
+          month: { $month: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json(error);
   }

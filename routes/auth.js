@@ -47,12 +47,13 @@ router.post("/login", async (req, res) => {
     const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
 
     const inputPasswordFromUser = req.body.password;
+
     //Checking if password user types in doesn't match to password in database, send message back
     if (originalPassword !== inputPasswordFromUser) {
       res.status(401).json("Wrong Credentials!");
     }
 
-    //after login process if everything is okay create JWT
+    //after login process if everything is okay create JWT for each user
     const accessToken = jwt.sign(
       {
         //Giving only user._id and user.isAdmin from the database to id and isAdmin payload in JWT
