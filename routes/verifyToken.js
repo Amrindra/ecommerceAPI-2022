@@ -27,10 +27,11 @@ const verifyTokenAndAuthorization = (req, res, next) => {
   });
 };
 
-//Verifying token for admin
+//Verifying token to have an authorizaton for admin only
 const verifyTokenAndAdmin = (req, res, next) => {
   verifyToken(req, res, () => {
     //checking to see if this user is an admin
+    console.log(req.user.isAdmin);
     if (req.user.isAdmin) {
       next();
     } else {

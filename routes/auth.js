@@ -46,16 +46,19 @@ router.post("/login", async (req, res) => {
     //converting hashedPassword to string type then store it in password variable
     const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
 
+    const inputPasswordFromUser = req.body.password;
     //Checking if password user types in doesn't match to password in database, send message back
-    if (originalPassword !== req.body.password) {
+    if (originalPassword !== inputPasswordFromUser) {
       res.status(401).json("Wrong Credentials!");
     }
 
     //after login process if everything is okay create JWT
     const accessToken = jwt.sign(
       {
-        //Passing user._id and user.isAdmin from the database to id and isAdmin payload
+        //Giving only user._id and user.isAdmin from the database to id and isAdmin payload in JWT
+        //isAdmin: user.isAdmin is used to give a permission to admin when login as admin
         id: user._id,
+        isAdmin: user.isAdmin,
       },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "2d" }
