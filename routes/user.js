@@ -85,7 +85,7 @@ router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
     const data = await User.aggregate([
       { $match: { createdAt: { $gte: lastyear } } },
       {
-        $preject: {
+        $project: {
           //take only month from createdAt in database then store it in month variable
           month: { $month: "$createdAt" },
         },
