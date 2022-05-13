@@ -76,6 +76,7 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //USER STATS
+//Using this stat to return total users per month. EX: number of users have registered....
 router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
   const date = new Date();
   const lastyear = new Date(date.setFullYear(date.getFullYear() - 1));
@@ -85,6 +86,7 @@ router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
       { $match: { createdAt: { $gte: lastyear } } },
       {
         $preject: {
+          //take only month from createdAt in database then store it in month variable
           month: { $month: "$createdAt" },
         },
       },
