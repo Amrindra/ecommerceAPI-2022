@@ -2,7 +2,7 @@
 const router = require("express").Router();
 const {
   verifyTokenAndAuthorization,
-  verifyTokenAndAdmin,
+  verifyTokenAndAdmin
 } = require("./verifyToken");
 
 // const CryptoJS = require("crypto-js");
@@ -27,7 +27,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
       req.params.id,
       {
         //Take everything inside req.body and then set/update them
-        $set: req.body,
+        $set: req.body
       },
       //To make it work we have to add new:true
       { new: true }
@@ -61,20 +61,17 @@ router.get("/find/:id", async (req, res) => {
   }
 });
 
-//GET ALL USERS
-// router.get("/", verifyTokenAndAdmin, async (req, res) => {
-//   //using query to limit how many users we want to return back
-//   const query = req.query.new;
+//GET ALL PRODUCT
+router.get("/", async (req, res) => {
+  const queryNew = req.query.new;
+  const queryCategory = req.query.category;
 
-//   try {
-//     const users = query
-//       ? await User.find().sort({ _id: -1 }).limit(5)
-//       : await User.find();
-//     res.status(200).json(users);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// });
+  try {
+    res.status(200).json();
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 //USER STATS
 //Using this stat to return total users per month. EX: number of users have registered....
