@@ -67,43 +67,23 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
     let products;
 
     if (queryNew) {
-      products = await Product.find().sort({ createdAt: -1 }).limit(5);
+      products = await Product.find().sort({ createdAt: -1 }).limit(1);
     } else if (queryCategory) {
-      products = await Product.find({ category });
+      //Checking to see if queryCategory we created above is inside the categories in the database(array) then fetch that product
+      products = await Product.find({
+        categories: {
+          $in: [queryCategory],
+        },
+      });
+    } else {
+      //There is no query then find all the products
+      products = await Product.find();
     }
 
-    res.status(200).json(users);
+    res.status(200).json(products);
   } catch (error) {
     res.status(500).json(error);
   }
 });
-
-//USER STATS
-//Using this stat to return total users per month. EX: number of users have registered....
-// router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
-//   const date = new Date();
-//   const lastyear = new Date(date.setFullYear(date.getFullYear() - 1));
-
-//   try {
-//     const data = await User.aggregate([
-//       { $match: { createdAt: { $gte: lastyear } } },
-//       {
-//         $project: {
-//           //take only month from createdAt in database then store it in month variable
-//           month: { $month: "$createdAt" },
-//         },
-//       },
-//       {
-//         $group: {
-//           _id: "$month",
-//           total: { $sum: 1 },
-//         },
-//       },
-//     ]);
-//     res.status(200).json(data);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// });
 
 module.exports = router;
