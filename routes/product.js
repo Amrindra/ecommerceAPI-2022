@@ -1,13 +1,6 @@
 //Using Router function from express
 const router = require("express").Router();
-<<<<<<< HEAD
 const { verifyTokenAndAdmin } = require("./verifyToken");
-=======
-const {
-  verifyTokenAndAuthorization,
-  verifyTokenAndAdmin
-} = require("./verifyToken");
->>>>>>> d23186e8c0880413183a57231d9cc960bf3e5db1
 
 // const CryptoJS = require("crypto-js");
 const Product = require("../models/Product");
@@ -31,7 +24,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
       req.params.id,
       {
         //Take everything inside req.body and then set/update them
-        $set: req.body
+        $set: req.body,
       },
       //To make it work we have to add new:true
       { new: true }
@@ -65,25 +58,21 @@ router.get("/find/:id", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-//GET ALL USERS
+//GET ALL PRODUCTS
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
-  const query = req.query.new;
-
-  try {
-    const users = query
-      ? await User.find().sort({ _id: -1 }).limit(5)
-      : await User.find();
-    res.status(200).json(users);
-=======
-//GET ALL PRODUCT
-router.get("/", async (req, res) => {
   const queryNew = req.query.new;
   const queryCategory = req.query.category;
 
   try {
-    res.status(200).json();
->>>>>>> d23186e8c0880413183a57231d9cc960bf3e5db1
+    let products;
+
+    if (queryNew) {
+      products = await Product.find().sort({ createdAt: -1 }).limit(5);
+    } else if (queryCategory) {
+      products = await Product.find({ category });
+    }
+
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).json(error);
   }
