@@ -78,8 +78,10 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
 //USER STATS
 //Using this stat to return total users per month. EX: number of users have registered....
 router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
-  const date = new Date();
-  const lastyear = new Date(date.setFullYear(date.getFullYear() - 1));
+  const currentDate = new Date();
+  const lastyear = new Date(
+    currentDate.setFullYear(currentDate.getFullYear() - 1)
+  );
 
   try {
     const data = await User.aggregate([
