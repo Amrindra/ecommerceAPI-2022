@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 //To verify a user if they are the right user
+//If we want everyone to have access we can use this verifyToken
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.token;
 
@@ -16,6 +17,7 @@ const verifyToken = (req, res, next) => {
   }
 };
 
+//verifyTokenAndAuthorization is for users who have an account with our website
 const verifyTokenAndAuthorization = (req, res, next) => {
   verifyToken(req, res, () => {
     //checking to see if they're the right user to udpate this information
